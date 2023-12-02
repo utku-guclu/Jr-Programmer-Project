@@ -9,11 +9,24 @@ public class Drive : MonoBehaviour
     public float speed = 10.0f;
     public float rotationSpeed = 100.0f;
     public GameObject fuel;
+    private bool isAutoPilot = false;
+
+    float tankSpeed = 3f;
+    float tankRotationSpeed = 0.02f;
 
     void Start()
     {
 
     }
+
+    void AutoPilot()
+    {
+        // turn
+        CalculateAngle();
+        // move
+        this.transform.position += this.transform.up * tankSpeed * Time.deltaTime;
+    }
+
 
     void CalculateAngle()
     {
@@ -33,8 +46,9 @@ public class Drive : MonoBehaviour
         if (Cross(tankForward, fuelDirection).z < 0)
             clockwise = -1;
 
-        this.transform.Rotate(0, 0, angle * Mathf.Rad2Deg * clockwise);
-
+        // rotate if necessary
+        if ((angle * Mathf.Rad2Deg) > 10)
+            this.transform.Rotate(0, 0, angle * Mathf.Rad2Deg * clockwise * tankRotationSpeed);
     }
 
     Vector3 Cross(Vector3 v, Vector3 w)
@@ -46,7 +60,7 @@ public class Drive : MonoBehaviour
         return (new Vector3(xMult, yMult, zMult));
     }
 
-    void CalculateDistance()
+    float CalculateDistance()
     {
         float distance = Mathf.Sqrt(Mathf.Pow(fuel.transform.position.x - transform.position.x,2) +
                                     Mathf.Pow(fuel.transform.position.z - transform.position.z,2));
@@ -61,6 +75,8 @@ public class Drive : MonoBehaviour
         Debug.Log("U Distance: " + uDistance);
         Debug.Log("V Magnitude: " + tankToFuel.magnitude);
         Debug.Log("V SqMagnitude: " + tankToFuel.sqrMagnitude);
+
+        return distance;
     }
 
     void LateUpdate()
@@ -87,5 +103,20 @@ public class Drive : MonoBehaviour
             CalculateAngle();
         }
 
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            // toggle autopilot
+            isAutoPilot = !isAutoPilot;
+        }
+
+        // final destination
+        if (CalculateDistance() < 3 ) 
+        {
+            isAutoPilot = false;
+        }
+
+        if (isAutoPilot) {
+            AutoPilot();
+        }
     }
 }

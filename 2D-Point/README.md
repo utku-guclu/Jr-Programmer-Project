@@ -13,3 +13,4 @@ The **dot product**, denoted by **`·`**, is a scalar quantity resulting from th
 
 For two vectors **A = (A1, A2, A3)** and **B = (B1, B2, B3)**, the dot product **A · B** is given by:
 
+![Clock](./cross.png)

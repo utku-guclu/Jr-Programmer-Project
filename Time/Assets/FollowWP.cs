@@ -8,6 +8,7 @@ public class FollowWP : MonoBehaviour
     public GameObject[] waypoints;
     int currentWP = 0;
     public float speed = 10.0f;
+    public float rotSpeed = 10.0f;
 
     void Start()
     {
@@ -28,7 +29,13 @@ public class FollowWP : MonoBehaviour
             currentWP++;
             Debug.Log(currentTarget);
 
-        this.transform.LookAt(currentTarget.transform); // lock the target
+        /* this.transform.LookAt(currentTarget.transform); // lock the target */
+
+        // smooth LookAt
+        Quaternion lookatWP = Quaternion.LookRotation(waypoints[currentWP].transform.position - this.transform.position)
+        
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookatWP, rotSpeed * Time.deltaTime);
+
         this.transform.Translate(0, 0, speed * Time.deltaTime); // increment z (forward)
     }
 }

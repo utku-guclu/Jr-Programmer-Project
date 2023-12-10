@@ -7,7 +7,6 @@ public class FollowWP : MonoBehaviour
     // Start is called before the first frame update
     public GameObject[] waypoints;
     int currentWP = 0;
-    int finalWP = 3;
     public float speed = 10.0f;
 
     void Start()
@@ -23,7 +22,9 @@ public class FollowWP : MonoBehaviour
        
         GameObject currentTarget = waypoints[currentWP];
 
-        if (Vector3.Distance(this.transform.position, currentTarget.transform.position) < finalWP)
+        float distanceBetween = Vector3.Distance(this.transform.position, currentTarget.transform.position);
+
+        if (distanceBetween < 3)
             currentWP++;
             Debug.Log(currentTarget);
 
